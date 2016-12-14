@@ -1,5 +1,7 @@
 package org.ckan;
 
+
+
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +27,13 @@ public class Dataset {
         public boolean success;
         public SearchResults result;
     }
+    
+    
+    
+    public class IDListResponse{
+    	public boolean success;
+    	public String[] result;
+    }
 
     /**
      * Represents the results of a search on a CKAN instance, and shows the
@@ -36,9 +45,20 @@ public class Dataset {
      */
     public class SearchResults {
         //{"count": 4, "search_facets": {}, "facets": {}, "results":
+    	
         public int count;
         public List<Dataset> results;
     }
+    
+    public class FirstSynchResults {
+    	public boolean success;
+        public List<Dataset> result;
+    }
+    
+    
+    
+    
+    
 
     private String id;
     private String name;
@@ -68,7 +88,6 @@ public class Dataset {
     private String ckan_url;
     private List<Extra> extras;
 
-    public Dataset(){}
 
     public void setId(String id) {
         this.id = id;
