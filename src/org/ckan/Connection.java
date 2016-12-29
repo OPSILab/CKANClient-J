@@ -159,9 +159,10 @@ public final class Connection {
 			// postRequest.setConfig(requestConfig);
 			postRequest.setHeader("X-CKAN-API-Key", this._apikey);
 
-			StringEntity input = new StringEntity(data);
+			StringEntity input = new StringEntity(data,"UTF-8");
 
 			input.setContentType("application/json");
+			input.setContentEncoding("UTF-8");
 			postRequest.setEntity(input);
 
 			HttpResponse response = httpclient.execute(postRequest);
