@@ -1,6 +1,7 @@
 package org.ckan;
 
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -66,7 +67,7 @@ public final class Connection {
 		else
 			this.m_host = host.split(".*:(\\d.*)")[0];
 		this.m_port = port;
-		
+
 		try {
 			URL u = new URL(this.m_host + ":" + this.m_port + "/api");
 		} catch (MalformedURLException mue) {
@@ -90,15 +91,13 @@ public final class Connection {
 	 *            The URL path to make the POST request to
 	 * @param data
 	 *            The data to be posted to the URL
-	 * @throws MalformedURLException
-	 * @throws SocketTimeoutException
 	 * @throws IOException
 	 * @throws UnsupportedOperationException
 	 * @returns The String contents of the response
 	 * @throws A
 	 *             CKANException if the request fails
 	 */
-	protected String Post(String path, String data) throws MalformedURLException, SocketTimeoutException {
+	protected String Post(String path, String data) throws UnknownHostException, SocketTimeoutException, IOException{
 		URL url = null;
 		String body = "";
 
@@ -137,7 +136,8 @@ public final class Connection {
 		 * /apache/http/examples/client/ClientExecuteProxy.java
 		 */
 
-		if (Boolean.parseBoolean(proxyProps.getProperty("http.proxyEnabled").trim()) && StringUtils.isNotBlank(proxyProps.getProperty("http.proxyHost").trim())) {
+		if (Boolean.parseBoolean(proxyProps.getProperty("http.proxyEnabled").trim())
+				&& StringUtils.isNotBlank(proxyProps.getProperty("http.proxyHost").trim())) {
 
 			int port = 80;
 			if (isSet(proxyProps.getProperty("http.proxyPort"))) {
@@ -159,7 +159,7 @@ public final class Connection {
 			// postRequest.setConfig(requestConfig);
 			postRequest.setHeader("X-CKAN-API-Key", this._apikey);
 
-			StringEntity input = new StringEntity(data,"UTF-8");
+			StringEntity input = new StringEntity(data, "UTF-8");
 
 			input.setContentType("application/json");
 			input.setContentEncoding("UTF-8");
@@ -175,10 +175,15 @@ public final class Connection {
 			}
 			body = result.toString();
 
-		} catch (UnsupportedOperationException | IOException e) {
+			
+		}catch (UnsupportedOperationException | UnknownHostException e){	
+			throw new UnknownHostException(e.getMessage());
+		
+		} catch (IOException e) {
 			if (e.getClass().equals(SocketTimeoutException.class) || e.getClass().equals(ConnectException.class))
-				throw new SocketTimeoutException(e.getMessage());
-			e.printStackTrace();
+				throw new SocketTimeoutException(e.getMessage());	
+			else
+				throw new IOException(e.getMessage());
 		}
 
 		return body;
