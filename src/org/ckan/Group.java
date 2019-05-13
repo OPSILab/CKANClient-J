@@ -19,16 +19,23 @@ public class Group {
 
 
     private String id;
+    private String revision_id;
     private String name;
-    private String capacity;
     private String title;
-    private String type;
     private String description;
     private String image_url;
+    private String image_display_url;
+    private String type;
+    private String state;
     private String created;
+    private Boolean is_organization;
     private String approval_status;
-    private List<Package> packages;
+    
     private List<Extra> extras;
+    
+    private String capacity;
+    private List<Package> packages;
+    
 
     public Group() {}
 
@@ -120,7 +127,39 @@ public class Group {
         return packages;
     }
 
-    public String toString() {
+    public String getRevision_id() {
+		return revision_id;
+	}
+
+	public void setRevision_id(String revision_id) {
+		this.revision_id = revision_id;
+	}
+
+	public String getImage_display_url() {
+		return image_display_url;
+	}
+
+	public void setImage_display_url(String image_display_url) {
+		this.image_display_url = image_display_url;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Boolean getIs_organization() {
+		return is_organization;
+	}
+
+	public void setIs_organization(Boolean is_organization) {
+		this.is_organization = is_organization;
+	}
+
+	public String toString() {
         return "<Group: " + this.getName() + ", " + this.getTitle() + "  (" + this.getType()+ ")>";
     }
 

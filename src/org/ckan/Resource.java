@@ -13,24 +13,37 @@ public class Resource{
 
 
     private String id;
-    private String resource_group_id;
-    private String name;
-    private String description;
-    private String created;
-    private String url;
-    private String webstore_url;
-    private String cache_last_updated;
+    private String revision_id;
     private String package_id;
-    private String webstore_last_updated;
-    private int size;
-    private int position;
-    private String resource_type;
-    private String last_modified;
-    private String hash;
+    private String url;
+    private String description;
     private String format;
+    private String hash;
+    private String state;
+    private int position;
+    private String name;
+    private String resource_type;
+    private String url_type;
     private String mimetype;
     private String mimetype_inner;
     private String cache_url;
+    private int size;
+    private String created;
+    private String last_modified;
+    private String cache_last_updated;
+    //private String tracking_summary;
+    private Boolean datastore_active;
+    
+    //Non ci sono in https://github.com/ckan/ckan/blob/master/ckan/logic/schema.py
+//    private String resource_group_id;
+//    private String webstore_url;
+//    private String webstore_last_updated;
+//    
+    
+    
+    
+    
+    
     
         
 /*tracking_summary: {
@@ -40,14 +53,14 @@ recent: 3
     
     public Resource() {}
 
-    public String getResource_group_id() {
-        return resource_group_id;
-    }
-
-    public void setResource_group_id(String resource_group_id) {
-        this.resource_group_id = resource_group_id;
-    }
-
+//    public String getResource_group_id() {
+//        return resource_group_id;
+//    }
+//
+//    public void setResource_group_id(String resource_group_id) {
+//        this.resource_group_id = resource_group_id;
+//    }
+    
     public void setId(String id) {
         this.id = id;
     }
@@ -88,13 +101,13 @@ recent: 3
         return url;
     }
 
-    public void setWebstore_url(String webstore_url) {
-        this.webstore_url = webstore_url;
-    }
-
-    public String getWebstore_url() {
-        return webstore_url;
-    }
+//    public void setWebstore_url(String webstore_url) {
+//        this.webstore_url = webstore_url;
+//    }
+//
+//    public String getWebstore_url() {
+//        return webstore_url;
+//    }
 
     public void setCache_last_updated(String cache_last_updated) {
         this.cache_last_updated = cache_last_updated;
@@ -112,13 +125,13 @@ recent: 3
         return package_id;
     }
 
-    public void setWebstore_last_updated(String webstore_last_updated) {
-        this.webstore_last_updated = webstore_last_updated;
-    }
-
-    public String getWebstore_last_updated() {
-        return webstore_last_updated;
-    }
+//    public void setWebstore_last_updated(String webstore_last_updated) {
+//        this.webstore_last_updated = webstore_last_updated;
+//    }
+//
+//    public String getWebstore_last_updated() {
+//        return webstore_last_updated;
+//    }
 
     public void setSize(int size) {
         this.size = size;
@@ -192,6 +205,47 @@ recent: 3
         return cache_url;
     }
 
+	public String getRevision_id() {
+		return revision_id;
+	}
+
+	public void setRevision_id(String revision_id) {
+		this.revision_id = revision_id;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getUrl_type() {
+		return url_type;
+	}
+
+	public void setUrl_type(String url_type) {
+		this.url_type = url_type;
+	}
+
+//	public String getTracking_summary() {
+//		return tracking_summary;
+//	}
+//
+//	public void setTracking_summary(String tracking_summary) {
+//		this.tracking_summary = tracking_summary;
+//	}
+
+	public Boolean getDatastore_active() {
+		return datastore_active;
+	}
+
+	public void setDatastore_active(Boolean datastore_active) {
+		this.datastore_active = datastore_active;
+	}
+
+    
 }
 
 

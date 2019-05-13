@@ -60,33 +60,63 @@ public class Dataset {
     
     
 
-    private String id;
-    private String name;
-    private String title;
-    private String revision_id;
-    private String maintainer;
-    private String maintainer_email;
-    private String license_id;
-    private String license;
-    private String license_title;
-    private String license_url;
-    private String metadata_created;
-    private String metadata_modified;
-    private String author;
-    private String author_email;
-    private String download_url;
-    private String state;
-    private String version;
-    private String type;
-    private String notes;
-    private String notes_rendered;
-    private boolean isopen;
-    private List<Tag> tags;
-    private List<Group> groups;
-    private List<Resource> resources;
-    private String url;
-    private String ckan_url;
-    private List<Extra> extras;
+    public String id;
+    public String revision_id;
+    
+    public String name;
+    public String title;
+    public String author;
+    public String author_email;
+    
+    public String maintainer;
+    public String maintainer_email;
+    
+    public String license_id;
+    
+    public String notes;
+    public String url;
+    
+    public String version;
+    public String state;
+    public String type;
+
+    public String owner_org;
+    public String log_message;
+    
+    //Dovrebbe essere public;
+    public Boolean privat;
+    
+    public List<Resource> resources;
+    public List<Tag> tags;
+    
+    public String tag_string;
+    
+    public List<Extra> extras;
+    
+    public List<Relationship> relationships_as_object;
+    public List<Relationship> relationships_as_subject;
+   
+    public List<Group> groups;
+    
+    public String license;
+    public String license_title;
+    public String license_url;
+    
+    public String metadata_created;
+    public String metadata_modified;
+    public String download_url;
+    
+    public String creator_user_id;
+    
+    public int num_resources;
+    public int num_tags;
+    
+    public boolean isopen;
+   
+    public Group organization;
+        
+    //private String ckan_url;
+    
 
 
     public void setId(String id) {
@@ -240,14 +270,6 @@ public class Dataset {
         return notes;
     }
 
-    public void setNotes_rendered(String notes_rendered) {
-        this.notes_rendered = notes_rendered;
-    }
-
-    public String getNotes_rendered() {
-        return notes_rendered;
-    }
-
     public void setIsopen(boolean isopen) {
         this.isopen = isopen;
     }
@@ -280,16 +302,19 @@ public class Dataset {
         return url;
     }
 
-    public void setCkan_url(String ckan_url) {
-        this.ckan_url = ckan_url;
-    }
-
-    public String getCkan_url() {
-        return ckan_url;
-    }
+//    public void setCkan_url(String ckan_url) {
+//        this.ckan_url = ckan_url;
+//    }
+//
+//    public String getCkan_url() {
+//        return ckan_url;
+//    }
 
     public List<Extra> getExtras() {
-        return extras;
+    	if(extras==null)
+    		return new ArrayList<Extra>();
+    	else 
+    		return extras;
     }
 
     public void setExtras( List<Extra> extras ) {
@@ -304,7 +329,69 @@ public class Dataset {
         this.resources = resources;
     }
 
-    public String toString() {
+    public String getOwner_org() {
+		return owner_org;
+	}
+	public void setOwner_org(String owner_org) {
+		this.owner_org = owner_org;
+	}
+	public String getLog_message() {
+		return log_message;
+	}
+	public void setLog_message(String log_message) {
+		this.log_message = log_message;
+	}
+	public Boolean getPriv() {
+		return privat;
+	}
+	public void setPriv(Boolean priv) {
+		this.privat = priv;
+	}
+	public String getTag_string() {
+		return tag_string;
+	}
+	public void setTag_string(String tag_string) {
+		this.tag_string = tag_string;
+	}
+
+	public List<Relationship> getRelationships_as_object() {
+		return relationships_as_object;
+	}
+	public void setRelationships_as_object(List<Relationship> relationships_as_object) {
+		this.relationships_as_object = relationships_as_object;
+	}
+	public List<Relationship> getRelationships_as_subject() {
+		return relationships_as_subject;
+	}
+	public void setRelationships_as_subject(List<Relationship> relationships_as_subject) {
+		this.relationships_as_subject = relationships_as_subject;
+	}
+	public String getCreator_user_id() {
+		return creator_user_id;
+	}
+	public void setCreator_user_id(String creator_user_id) {
+		this.creator_user_id = creator_user_id;
+	}
+	public int getNum_resources() {
+		return num_resources;
+	}
+	public void setNum_resources(int num_resources) {
+		this.num_resources = num_resources;
+	}
+	public int getNum_tags() {
+		return num_tags;
+	}
+	public void setNum_tags(int num_tags) {
+		this.num_tags = num_tags;
+	}
+	public Group getOrganization() {
+		return organization;
+	}
+	public void setOrganization(Group organization) {
+		this.organization = organization;
+	}
+	
+	public String toString() {
         return "<Dataset:" + this.getName() + " ," + this.getTitle() + "," + this.getAuthor() + ", " + this.getUrl() + ">";
     }
 }

@@ -1,6 +1,7 @@
 package org.ckan;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 //import it.eng.rspa.odf.beans.ODMSNodeForbiddenException;
@@ -26,7 +27,8 @@ public final class Client {
 
 	private Connection _connection = null;
 	private static Logger logger = LogManager.getLogger(Client.class);
-
+	public static Gson gson = new Gson();
+	private Gson gsonExtras = new GsonBuilder().registerTypeAdapter(Dataset.class, new DatasetAdditionalDeserializer()).create();
 	/**
 	 * Constructs a new Client for making requests to a remote CKAN instance.
 	 *
@@ -45,8 +47,7 @@ public final class Client {
 	 * Loads a JSON string into a class of the specified type.
 	 */
 	protected <T> T LoadClass(Class<T> cls, String data) {
-		Gson gson = new Gson();
-		return gson.fromJson(data, cls);
+		return gsonExtras.fromJson(data, cls);
 	}
 
 	/**

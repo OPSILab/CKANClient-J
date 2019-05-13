@@ -8,10 +8,10 @@ package org.ckan;
  * @since       2012-05-01
  */
 public class Tag {
-
+	private String name;
     private String vocabulary_id;
     private String display_name;
-    private String name;
+    
     private String id;
 
     public String getVocabularyId() { return vocabulary_id; }
