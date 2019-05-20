@@ -2,6 +2,9 @@ package org.ckan;
 
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
@@ -22,8 +25,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.AbstractHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -92,12 +99,15 @@ public final class Connection {
 	 * @param data
 	 *            The data to be posted to the URL
 	 * @throws IOException
+	 * @throws KeyStoreException 
+	 * @throws NoSuchAlgorithmException 
+	 * @throws KeyManagementException 
 	 * @throws UnsupportedOperationException
 	 * @returns The String contents of the response
 	 * @throws A
 	 *             CKANException if the request fails
 	 */
-	protected String Post(String path, String data) throws UnknownHostException, SocketTimeoutException, IOException{
+	protected String Post(String path, String data) throws UnknownHostException, SocketTimeoutException, IOException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException{
 		URL url = null;
 		String body = "";
 
@@ -123,9 +133,16 @@ public final class Connection {
 		// data.contains("\"rows\":\"0\"") || path.contains("package_list")) )
 		// HttpConnectionParams.setSoTimeout(httpParams, 6);
 		// else
+		
 		HttpConnectionParams.setSoTimeout(httpParams, 900000);
-
-		HttpClient httpclient = new DefaultHttpClient(httpParams);
+		
+		SSLContextBuilder builder = new SSLContextBuilder();
+	    builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+	    SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+	            builder.build());
+	    
+		HttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
+	            sslsf).build();
 
 		/*
 		 * Set an HTTP proxy if it is specified in system properties.

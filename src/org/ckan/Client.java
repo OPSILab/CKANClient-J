@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -105,6 +108,10 @@ public final class Client {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
 			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CKANException(e.getMessage());
 		}
 		// logger.info(returned_json);
 		if (!returned_json.startsWith("{")) {
@@ -158,6 +165,10 @@ public final class Client {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
 			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CKANException(e.getMessage());
 		}
 
 		Dataset.Response r = LoadClass(Dataset.Response.class, returned_json);
@@ -193,6 +204,10 @@ public final class Client {
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
+			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new CKANException(e.getMessage());
 		}
 
@@ -232,6 +247,10 @@ public final class Client {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
 			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CKANException(e.getMessage());
 		}
 
 		Group.Response r = LoadClass(Group.Response.class, returned_json);
@@ -264,6 +283,10 @@ public final class Client {
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
+			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new CKANException(e.getMessage());
 		}
 
@@ -299,6 +322,10 @@ public final class Client {
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
+			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 			throw new CKANException(e.getMessage());
 		}
 
@@ -351,6 +378,10 @@ public final class Client {
 			} catch (SocketTimeoutException e) {
 				throw new CKANException(" The ODMS node is currently unreachable");
 			} catch (IOException e) {
+				throw new CKANException(e.getMessage());
+			} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 				throw new CKANException(e.getMessage());
 			}
 
@@ -421,6 +452,10 @@ public final class Client {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
 			throw new CKANException(e.getMessage());
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CKANException(e.getMessage());
 		}
 		if (!returned_json.startsWith("{")) {
 			// throw new ODMSNodeOfflineException(" The ODMS node is currently
@@ -468,7 +503,11 @@ public final class Client {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
 			throw new CKANException(e.getMessage());
-		}
+		} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException  e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new CKANException(e.getMessage());
+		} 
 
 		if (!returned_json.startsWith("{")) {
 			if (returned_json.matches(".*The requested URL could not be retrieved.*")
