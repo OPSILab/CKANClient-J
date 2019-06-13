@@ -27,7 +27,6 @@ public class DatasetAdditionalDeserializer implements JsonDeserializer<Dataset>{
 				res.setPriv(j.optBoolean(k, false));
 			}else if(!doesObjectContainField(k)) {
 				if(!extraKeys.contains(k)) {
-					System.out.println(k+" "+j.get(k).toString());
 					res.getExtras().add(new Extra(k, j.get(k).toString()));
 				}
 			}
