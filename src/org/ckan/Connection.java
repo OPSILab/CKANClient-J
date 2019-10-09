@@ -184,6 +184,9 @@ public final class Connection {
 
 			HttpResponse response = httpclient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
+			if(statusCode==404) {
+				throw new UnknownHostException("404NotFound");
+			}
 			BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 			String result = "";
 			String line = "";

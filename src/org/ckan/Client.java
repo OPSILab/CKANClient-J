@@ -103,7 +103,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/package_show", "{\"id\":\"" + name + "\"}");
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/package_show", "{\"id\":\"" + name + "\"}");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -160,7 +169,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/package_delete", "{\"id\":\"" + name + "\"}");
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/package_delete", "{\"id\":\"" + name + "\"}");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -200,7 +218,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/package_create", data);
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/package_create", data);
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -242,7 +269,16 @@ public final class Client {
 			returned_json = this._connection.Post("/api/action/group_show", "{\"id\":\"" + name + "\"}");
 
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json =  this._connection.Post("/api/3/action/group_show", "{\"id\":\"" + name + "\"}");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -279,7 +315,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/group_delete", "{\"id\":\"" + name + "\"}");
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json =  this._connection.Post("/api/3/action/group_delete", "{\"id\":\"" + name + "\"}");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -318,7 +363,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/package_create", data);
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/package_create", data);
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -370,11 +424,19 @@ public final class Client {
 		int attempts = 0;
 		boolean stop = true;
 		do {
-			try {
+			try {				
 				returned_json = this._connection.Post("/api/action/package_search", payload);
-
 			} catch (UnknownHostException e) {
-				throw new CKANException(" The ODMS host does not exist");
+				if(e.getMessage()=="404NotFound") {
+					try {
+						returned_json = this._connection.Post("/api/3/action/package_search", payload);
+					} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+						// TODO Auto-generated catch block
+						throw new CKANException(e1.getMessage());
+					}
+				}else {
+					throw new CKANException(" The ODMS host does not exist");
+				}
 			} catch (SocketTimeoutException e) {
 				throw new CKANException(" The ODMS node is currently unreachable");
 			} catch (IOException e) {
@@ -447,7 +509,16 @@ public final class Client {
 		try {
 			returned_json = this._connection.Post("/api/action/package_list", "");
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/package_list", "");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -498,7 +569,17 @@ public final class Client {
 			logger.info("GET ALL DATASET CLIENT ------- END");
 
 		} catch (UnknownHostException e) {
-			throw new CKANException(" The ODMS host does not exist");
+			if(e.getMessage()=="404NotFound") {
+				try {
+					returned_json = this._connection.Post("/api/3/action/current_package_list_with_resources",
+							"{\"limit\":\"" + limit + "\",\"offset\":\"" + offset + "\"}");
+				} catch (KeyManagementException | NoSuchAlgorithmException | KeyStoreException | IOException e1) {
+					// TODO Auto-generated catch block
+					throw new CKANException(e1.getMessage());
+				}
+			}else {
+				throw new CKANException(" The ODMS host does not exist");
+			}
 		} catch (SocketTimeoutException e) {
 			throw new CKANException(" The ODMS node is currently unreachable");
 		} catch (IOException e) {
@@ -589,7 +670,7 @@ public final class Client {
 		 * "/api/action/recently_changed_packages_activity_list",
 		 * "{\"limit\":10000,\"offset\":"+offset+"}");
 		 * if(returned_json.startsWith("{")) retry=false; else{ retryNum++;
-		 * logger.info("Exception attempt n: "+ retryNum); if(retryNum==5)
+		 * //logger.info("Exception attempt n: "+ retryNum); if(retryNum==5)
 		 * retry=false; } }while(retry);
 		 * 
 		 * 
