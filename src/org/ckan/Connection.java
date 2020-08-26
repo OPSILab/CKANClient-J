@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +36,7 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.logging.log4j.*;
+
 import org.apache.http.entity.StringEntity;
 
 /**
@@ -151,23 +153,23 @@ public final class Connection {
 		 */
 		HttpHost proxy = null;
 		HttpClient httpclient=null;
-		if (Boolean.parseBoolean(proxyProps.getProperty("http.proxyEnabled").trim())
-				&& StringUtils.isNotBlank(proxyProps.getProperty("http.proxyHost").trim())) {
-
+		if (Boolean.parseBoolean(getProperty("http.proxyEnabled").trim())
+				&& StringUtils.isNotBlank(getProperty("http.proxyHost").trim())) {
+			
 			int port = 80;
-			if (isSet(proxyProps.getProperty("http.proxyPort"))) {
-				port = Integer.parseInt(proxyProps.getProperty("http.proxyPort"));
+			if (isSet(getProperty("http.proxyPort"))) {
+				port = Integer.parseInt(getProperty("http.proxyPort"));
 			}
-			proxy = new HttpHost(proxyProps.getProperty("http.proxyHost"), port, "http");
+			proxy = new HttpHost(getProperty("http.proxyHost"), port, "http");
 			
 			httpclient = HttpClients.custom().setProxy(proxy).setSSLSocketFactory(
 		            sslsf).build();
 			
-			if (isSet(proxyProps.getProperty("http.proxyUser"))) {
+			if (isSet(getProperty("http.proxyUser"))) {
 				((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(
-						new AuthScope(proxyProps.getProperty("http.proxyHost"), port),
-						(Credentials) new UsernamePasswordCredentials(proxyProps.getProperty("http.proxyUser"),
-								proxyProps.getProperty("http.proxyPassword")));
+						new AuthScope(getProperty("http.proxyHost"), port),
+						(Credentials) new UsernamePasswordCredentials(getProperty("http.proxyUser"),
+								getProperty("http.proxyPassword")));
 			}
 		}else {
 			httpclient = HttpClients.custom().setSSLSocketFactory(
@@ -202,10 +204,12 @@ public final class Connection {
 			body = result.toString();
 
 			
-		}catch (UnsupportedOperationException | UnknownHostException e){	
+		}catch (UnsupportedOperationException | UnknownHostException e){
+			e.printStackTrace();
 			throw new UnknownHostException(e.getMessage());
 		
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (e.getClass().equals(SocketTimeoutException.class) || e.getClass().equals(ConnectException.class))
 				throw new SocketTimeoutException(e.getMessage());	
 			else
@@ -217,5 +221,10 @@ public final class Connection {
 
 	private static boolean isSet(String string) {
 		return string != null && string.length() > 0;
+	}
+	
+	public static String getProperty(String propName) {
+		Optional<String> prop = Optional.ofNullable(System.getenv(propName.toString()));
+		return prop.orElse(proxyProps.getProperty(propName.toString()));
 	}
 }
