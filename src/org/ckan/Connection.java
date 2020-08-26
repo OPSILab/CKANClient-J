@@ -141,9 +141,6 @@ public final class Connection {
 	    SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
 	            builder.build());
 	    
-		HttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
-	            sslsf).build();
-
 		/*
 		 * Set an HTTP proxy if it is specified in system properties.
 		 * 
@@ -152,7 +149,8 @@ public final class Connection {
 		 * http://hc.apache.org/httpcomponents-client-ga/httpclient/examples/org
 		 * /apache/http/examples/client/ClientExecuteProxy.java
 		 */
-
+		HttpHost proxy = null;
+		HttpClient httpclient=null;
 		if (Boolean.parseBoolean(proxyProps.getProperty("http.proxyEnabled").trim())
 				&& StringUtils.isNotBlank(proxyProps.getProperty("http.proxyHost").trim())) {
 
@@ -160,15 +158,23 @@ public final class Connection {
 			if (isSet(proxyProps.getProperty("http.proxyPort"))) {
 				port = Integer.parseInt(proxyProps.getProperty("http.proxyPort"));
 			}
-			HttpHost proxy = new HttpHost(proxyProps.getProperty("http.proxyHost"), port, "http");
-			httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+			proxy = new HttpHost(proxyProps.getProperty("http.proxyHost"), port, "http");
+			
+			httpclient = HttpClients.custom().setProxy(proxy).setSSLSocketFactory(
+		            sslsf).build();
+			
 			if (isSet(proxyProps.getProperty("http.proxyUser"))) {
 				((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(
 						new AuthScope(proxyProps.getProperty("http.proxyHost"), port),
 						(Credentials) new UsernamePasswordCredentials(proxyProps.getProperty("http.proxyUser"),
 								proxyProps.getProperty("http.proxyPassword")));
 			}
+		}else {
+			httpclient = HttpClients.custom().setSSLSocketFactory(
+		            sslsf).build();
 		}
+		
+		
 		try {
 
 			HttpPost postRequest = new HttpPost(url.toString());
