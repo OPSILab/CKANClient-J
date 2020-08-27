@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,12 +30,15 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.logging.log4j.*;
+
 import org.apache.http.entity.StringEntity;
 
 /**
@@ -150,24 +154,27 @@ public final class Connection {
 		 * /apache/http/examples/client/ClientExecuteProxy.java
 		 */
 		HttpHost proxy = null;
-		HttpClient httpclient=null;
-		if (Boolean.parseBoolean(proxyProps.getProperty("http.proxyEnabled").trim())
-				&& StringUtils.isNotBlank(proxyProps.getProperty("http.proxyHost").trim())) {
-
+		CloseableHttpClient httpclient=null;
+		if (Boolean.parseBoolean(getProperty("http.proxyEnabled").trim())
+				&& StringUtils.isNotBlank(getProperty("http.proxyHost").trim())) {
+			
 			int port = 80;
-			if (isSet(proxyProps.getProperty("http.proxyPort"))) {
-				port = Integer.parseInt(proxyProps.getProperty("http.proxyPort"));
+			if (StringUtils.isNotBlank(getProperty("http.proxyPort"))) {
+				port = Integer.parseInt(getProperty("http.proxyPort"));
 			}
-			proxy = new HttpHost(proxyProps.getProperty("http.proxyHost"), port, "http");
+			proxy = new HttpHost(getProperty("http.proxyHost"), port, "http");
 			
-			httpclient = HttpClients.custom().setProxy(proxy).setSSLSocketFactory(
-		            sslsf).build();
-			
-			if (isSet(proxyProps.getProperty("http.proxyUser"))) {
+			DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+			httpclient = HttpClients.custom()
+			                    .setRoutePlanner(routePlanner)
+			                    .setSSLSocketFactory(
+			        		            sslsf).build();
+						
+			if (StringUtils.isNotBlank(getProperty("http.proxyUser"))) {
 				((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(
-						new AuthScope(proxyProps.getProperty("http.proxyHost"), port),
-						(Credentials) new UsernamePasswordCredentials(proxyProps.getProperty("http.proxyUser"),
-								proxyProps.getProperty("http.proxyPassword")));
+						new AuthScope(getProperty("http.proxyHost"), port),
+						(Credentials) new UsernamePasswordCredentials(getProperty("http.proxyUser"),
+								getProperty("http.proxyPassword")));
 			}
 		}else {
 			httpclient = HttpClients.custom().setSSLSocketFactory(
@@ -190,6 +197,7 @@ public final class Connection {
 
 			HttpResponse response = httpclient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
+			logger.info("Status code: "+statusCode);
 			if(statusCode==404) {
 				throw new UnknownHostException("404NotFound");
 			}
@@ -202,10 +210,12 @@ public final class Connection {
 			body = result.toString();
 
 			
-		}catch (UnsupportedOperationException | UnknownHostException e){	
+		}catch (UnsupportedOperationException | UnknownHostException e){
+			e.printStackTrace();
 			throw new UnknownHostException(e.getMessage());
 		
 		} catch (IOException e) {
+			e.printStackTrace();
 			if (e.getClass().equals(SocketTimeoutException.class) || e.getClass().equals(ConnectException.class))
 				throw new SocketTimeoutException(e.getMessage());	
 			else
@@ -217,5 +227,10 @@ public final class Connection {
 
 	private static boolean isSet(String string) {
 		return string != null && string.length() > 0;
+	}
+	
+	public static String getProperty(String propName) {
+		Optional<String> prop = Optional.ofNullable(System.getenv(propName.toString()));
+		return prop.orElse(proxyProps.getProperty(propName.toString()));
 	}
 }
