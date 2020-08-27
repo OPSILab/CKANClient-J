@@ -30,8 +30,10 @@ import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -152,20 +154,23 @@ public final class Connection {
 		 * /apache/http/examples/client/ClientExecuteProxy.java
 		 */
 		HttpHost proxy = null;
-		HttpClient httpclient=null;
+		CloseableHttpClient httpclient=null;
 		if (Boolean.parseBoolean(getProperty("http.proxyEnabled").trim())
 				&& StringUtils.isNotBlank(getProperty("http.proxyHost").trim())) {
 			
 			int port = 80;
-			if (isSet(getProperty("http.proxyPort"))) {
+			if (StringUtils.isNotBlank(getProperty("http.proxyPort"))) {
 				port = Integer.parseInt(getProperty("http.proxyPort"));
 			}
 			proxy = new HttpHost(getProperty("http.proxyHost"), port, "http");
 			
-			httpclient = HttpClients.custom().setProxy(proxy).setSSLSocketFactory(
-		            sslsf).build();
-			
-			if (isSet(getProperty("http.proxyUser"))) {
+			DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+			httpclient = HttpClients.custom()
+			                    .setRoutePlanner(routePlanner)
+			                    .setSSLSocketFactory(
+			        		            sslsf).build();
+						
+			if (StringUtils.isNotBlank(getProperty("http.proxyUser"))) {
 				((AbstractHttpClient) httpclient).getCredentialsProvider().setCredentials(
 						new AuthScope(getProperty("http.proxyHost"), port),
 						(Credentials) new UsernamePasswordCredentials(getProperty("http.proxyUser"),
@@ -192,6 +197,7 @@ public final class Connection {
 
 			HttpResponse response = httpclient.execute(postRequest);
 			int statusCode = response.getStatusLine().getStatusCode();
+			logger.info("Status code: "+statusCode);
 			if(statusCode==404) {
 				throw new UnknownHostException("404NotFound");
 			}
